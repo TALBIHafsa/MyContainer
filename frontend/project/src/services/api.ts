@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Student, StudentFormData } from '../types/student';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8081/api'
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 });
 
 export const studentApi = {
