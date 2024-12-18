@@ -1,9 +1,6 @@
 package org.example.contproject.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 
@@ -34,4 +31,7 @@ public class Student {
 
     @NotNull(message = "Date of birth is required")
     private LocalDate dateOfBirth;
+
+    @Version
+    private Long version = 0L;
 }

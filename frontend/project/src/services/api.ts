@@ -2,7 +2,8 @@ import axios from 'axios';
 import { Student, StudentFormData } from '../types/student';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
 });
 
 export const studentApi = {
@@ -12,7 +13,12 @@ export const studentApi = {
   },
   
   create: async (student: StudentFormData) => {
-    const response = await api.post<Student>('/students', student);
+    console.log('Student data in create method:', student);
+
+    const response = await api.post<Student>('/students', student, {
+      headers: { 'Content-Type': 'application/json' },
+
+    });
     return response.data;
   },
   

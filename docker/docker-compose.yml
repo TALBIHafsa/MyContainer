@@ -1,0 +1,28 @@
+services:
+  mysql:
+    image: mysql:8.0.40-debian
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: TALtal2024**
+      MYSQL_DATABASE: studentdb
+    networks:
+      - my_network
+    volumes:
+      - mysql_data:/var/lib/mysql
+  backend:
+    image: localhost:7000/my_backend:1.0.0
+    ports:
+      - "5000:5000"
+    networks:
+      - my_network
+  frontend:
+    image: localhost:7000/my_frontend:1.0.0
+    ports:
+      - "3000:80"
+    networks:
+      - my_network
+networks:
+  my_network:
+    driver: bridge
+volumes:
+  mysql_data:

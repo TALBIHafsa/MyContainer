@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Toaster, toast } from 'react-hot-toast';
-import { StudentForm } from './components/students/StudentForm';
-import { StudentTable } from './components/students/StudentTable';
-import { Student } from './types/student';
-import { studentApi } from './services/api';
+import React, { useState, useEffect } from "react";
+import { Toaster, toast } from "react-hot-toast";
+import { StudentForm } from "./components/students/StudentForm";
+import { StudentTable } from "./components/students/StudentTable";
+import { Student } from "./types/student";
+import { studentApi } from "./services/api";
 
 export default function App() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -19,7 +19,7 @@ export default function App() {
       const data = await studentApi.getAll();
       setStudents(data);
     } catch (error) {
-      toast.error('Failed to load students');
+      toast.error("Failed to load students");
     } finally {
       setLoading(false);
     }
@@ -27,34 +27,42 @@ export default function App() {
 
   const handleAddStudent = async (studentData: Student) => {
     try {
-      const newStudent = await studentApi.create(studentData);
-      setStudents(prev => [...prev, newStudent]);
-      toast.success('Student added successfully');
+      const { id, ...studentWithoutId } = studentData;
+
+      console.log(
+        "Student Data being sent: (studentWithoutId)",
+        studentWithoutId
+      );
+
+      const newStudent = await studentApi.create(studentWithoutId);
+      setStudents((prev) => [...prev, newStudent]);
+      toast.success("Student added successfully");
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to add student');
+      console.error("Error adding student:", error);
+      toast.error(error.response?.data?.error || "Failed to add student");
     }
   };
 
   const handleEditStudent = async (student: Student) => {
     try {
       const updatedStudent = await studentApi.update(student.id, student);
-      setStudents(prev =>
-        prev.map(s => (s.id === updatedStudent.id ? updatedStudent : s))
+      setStudents((prev) =>
+        prev.map((s) => (s.id === updatedStudent.id ? updatedStudent : s))
       );
       setEditingStudent(null);
-      toast.success('Student updated successfully');
+      toast.success("Student updated successfully");
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to update student');
+      toast.error(error.response?.data?.error || "Failed to update student");
     }
   };
 
   const handleDeleteStudent = async (id: string) => {
     try {
       await studentApi.delete(id);
-      setStudents(prev => prev.filter(student => student.id !== id));
-      toast.success('Student deleted successfully');
+      setStudents((prev) => prev.filter((student) => student.id !== id));
+      toast.success("Student deleted successfully");
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to delete student');
+      toast.error(error.response?.data?.error || "Failed to delete student");
     }
   };
 
@@ -64,7 +72,7 @@ export default function App() {
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           Student Management System
         </h1>
-        
+
         {editingStudent ? (
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
