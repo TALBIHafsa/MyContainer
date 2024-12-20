@@ -1,28 +1,74 @@
+version: "3.8"
 services:
-  mysql:
+  app-database:
     image: mysql:8.0.40-debian
-    container_name: mysql-container
     environment:
       MYSQL_ROOT_PASSWORD: TALtal2024**
       MYSQL_DATABASE: studentdb
+    ports:
+      - "3307:3306"
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5" # Limiter à 50% d'un CPU par conteneur
+          memory: 512M # Limiter à 512 Mo de RAM par conteneur
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
     networks:
-      - my_network
+      - app-network
     volumes:
-      - mysql_data:/var/lib/mysql
-  backend:
+      - db_data:/var/lib/mysql
+
+  app-backend:
     image: localhost:7000/my_backend:1.0.0
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://app-database:3306/studentdb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: TALtal2024**
     ports:
       - "5000:5000"
+    deploy:
+      replicas: 2 # Réplication pour le backend
+      resources:
+        limits:
+          cpus: "1.0" # Limiter à un CPU par conteneur
+          memory: 1G # Limiter à 1 Go de RAM par conteneur
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
     networks:
-      - my_network
-  frontend:
+      - app-network
+    depends_on:
+      - app-database
+
+  app-frontend:
     image: localhost:7000/my_frontend:1.0.0
     ports:
       - "3000:80"
+    deploy:
+      replicas: 2 # Réplication pour le frontend
+      resources:
+        limits:
+          cpus: "0.5" # Limiter à 50% d'un CPU par conteneur
+          memory: 512M # Limiter à 512 Mo de RAM par conteneur
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
     networks:
-      - my_network
+      - app-network
+    depends_on:
+      - app-backend
+
 networks:
-  my_network:
-    driver: bridge
+  app-network:
+    driver: overlay
+    attachable: true
+
 volumes:
-  mysql_data:
+  db_data:
+    driver: local
