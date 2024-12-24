@@ -63,6 +63,21 @@ services:
       - app-network
     depends_on:
       - app-backend
+  
+  nginx-proxy:
+    image: nginx:latest
+    ports:
+      - "80:80" # HTTP
+      - "443:443" # HTTPS (si SSL est configuré)
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d # Monter les configurations personnalisées
+    networks:
+      - app-network
+    depends_on:
+      - app-frontend
+      - app-backend
+      - app-database
+
 
 networks:
   app-network:

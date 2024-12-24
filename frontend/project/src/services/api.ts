@@ -2,8 +2,7 @@ import axios from 'axios';
 import { Student, StudentFormData } from '../types/student';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-
+  baseURL: import.meta.env.VITE_API_URL || 'http://backend.local/api/' // Update to use Docker network name
 });
 
 export const studentApi = {
