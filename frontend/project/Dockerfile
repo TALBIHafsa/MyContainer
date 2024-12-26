@@ -1,7 +1,8 @@
+#front
 FROM node:23.4-alpine3.21 AS builder
 WORKDIR /app
 
-COPY ["package.json", "package-lock.json", "./"]
+COPY ["package.json", "package-lock.json", "./" ]
 RUN npm cache clean --force
 
 RUN npm install --legacy-peer-deps
