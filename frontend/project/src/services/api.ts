@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Student, StudentFormData } from '../types/student';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:58516/api/' // Update to use Docker network name
+  baseURL: import.meta.env.VITE_API_URL || 'http://talbi.backend.com/api/' // Update to use Docker network name
 });
 
 export const studentApi = {
